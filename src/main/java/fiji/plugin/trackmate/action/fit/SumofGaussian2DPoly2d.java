@@ -80,43 +80,7 @@ public class SumofGaussian2DPoly2d implements MTFitFunction {
 	 * 
 	 */
 
-	public static double numdiff(double[] x, double[] a, int dim, double[] b) {
-
-		double[] newa = new double[a.length];
-		final int ndims = x.length;
-		double epsilon = 0.001;
-		double f1 = 0;
-		double f2 = 0;
-		double diff = 0;
-
-		do {
-
-			for (int i = 0; i < a.length; ++i) {
-				newa[i] = a[i];
-				if (i == dim)
-					newa[i] = a[i] + epsilon;
-			}
-			f1 = (Etotal(x, newa, b) - Etotal(x, a, b)) / epsilon;
-
-			epsilon /= 2;
-
-			for (int i = 0; i < a.length; ++i) {
-				newa[i] = a[i];
-				if (i == dim)
-					newa[i] = a[i] + epsilon;
-			}
-
-			f2 = (Etotal(x, newa, b) - Etotal(x, a, b)) / epsilon;
-
-			diff = Math.abs(f2 - f1);
-
-			f1 = f2;
-		} while (diff > 1.0E-2);
-
-		return a[2 * ndims + 2] * f2;
-
-	}
-
+	
 	private static final double Estart(final double[] x, final double[] a, final double[] b) {
 
 		double sum = 0;
@@ -270,8 +234,6 @@ public class SumofGaussian2DPoly2d implements MTFitFunction {
 		final int ndims = x.length;
 		double[] minVal = new double[ndims];
 		double[] maxVal = new double[ndims];
-		double sigmaX = 1 / Math.sqrt(b[0]);
-		double sigmaY = 1 / Math.sqrt(b[1]);
 
 		for (int i = 0; i < x.length; i++) {
 			minVal[i] = a[i];
@@ -311,17 +273,5 @@ public class SumofGaussian2DPoly2d implements MTFitFunction {
 		return sumofgaussians;
 	}
 
-	public static double Distance(final double[] cordone, final double[] cordtwo) {
-
-		double distance = 0;
-		final double ndims = cordone.length;
-
-		for (int d = 0; d < ndims; ++d) {
-
-			distance += Math.pow((cordone[d] - cordtwo[d]), 2);
-
-		}
-		return Math.sqrt(distance);
-	}
 
 }

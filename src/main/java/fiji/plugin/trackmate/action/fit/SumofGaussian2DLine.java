@@ -23,53 +23,46 @@
 
 package fiji.plugin.trackmate.action.fit;
 
-
 public class SumofGaussian2DLine implements MTFitFunction {
 
-	
 	static double fcteps = 1.0E-30;
+
 	@Override
 	public double val(double[] x, double[] a, final double[] b) {
 		final int ndims = x.length;
-		
-		
-		return  a[2 * ndims + 1] * Etotal(x,a,b) + a[2 * ndims + 2] ;
-		
+
+		return a[2 * ndims + 1] * Etotal(x, a, b) + a[2 * ndims + 2];
+
 	}
 
-	
 	@Override
 	public double grad(double[] x, double[] a, final double[] b, int k) {
 		final int ndims = x.length;
 
-		if (k < ndims) {
+		if (k < ndims) 
 
-			return 2 * b[k] * (x[k] - a[k])  * a[2 * ndims + 1] * Estart(x, a, b);
+			return 2 * b[k] * (x[k] - a[k]) * a[2 * ndims + 1] * Estart(x, a, b);
 
-		}
+		
 
 		else if (k >= ndims && k <= ndims + 1) {
 			int dim = k - ndims;
-			return 2 * b[dim] * (x[dim] - a[k])  * a[2 * ndims + 1] * Eend(x, a, b);
+			return 2 * b[dim] * (x[dim] - a[k]) * a[2 * ndims + 1] * Eend(x, a, b);
 
 		}
 
-		else if (k == 2 * ndims){
+		else if (k == 2 * ndims) 
+
+			return a[2 * ndims + 1] * Estartds(x, a, b);
+
 		
-			
-			return  a[2 * ndims + 1] *Estartds(x, a, b);
-			
-		}
-		
-		
+
 		else if (k == 2 * ndims + 1)
 			return Etotal(x, a, b);
-		
-		
+
 		else if (k == 2 * ndims + 2)
 			return 1.0;
 
-		
 		else
 			return 0;
 
@@ -85,8 +78,6 @@ public class SumofGaussian2DLine implements MTFitFunction {
 	 * 
 	 */
 
-
-
 	private static final double Estart(final double[] x, final double[] a, final double[] b) {
 
 		double sum = 0;
@@ -100,9 +91,8 @@ public class SumofGaussian2DLine implements MTFitFunction {
 
 	}
 
-private static final double Estartds(final double[] x, final double[] a, final double[] b) {
+	private static final double Estartds(final double[] x, final double[] a, final double[] b) {
 
-		
 		double di;
 		int count = 1;
 		final int ndims = x.length;
@@ -114,52 +104,39 @@ private static final double Estartds(final double[] x, final double[] a, final d
 			maxVal[i] = a[ndims + i];
 		}
 		double slope = (maxVal[1] - minVal[1]) / (maxVal[0] - minVal[0] + fcteps);
-		
-		
+
 		double ds = Math.abs(a[2 * ndims]);
 
-		double[] dxvector = { ds / Math.sqrt( 1 + slope * slope) , slope * ds/ Math.sqrt( 1 + slope * slope)  };
-		double[] dxvectorderiv = { 1/ Math.sqrt( 1 + slope * slope) , slope/ Math.sqrt( 1 + slope * slope)  };
+		double[] dxvector = { ds / Math.sqrt(1 + slope * slope), slope * ds / Math.sqrt(1 + slope * slope) };
+		double[] dxvectorderiv = { 1 / Math.sqrt(1 + slope * slope), slope / Math.sqrt(1 + slope * slope) };
 
-		
-		
-	double sumofgaussians = 0;
-		
-	
-		while(true){
-		double dsum = 0;
-		double sum = 0;
-		for (int i = 0; i < x.length; i++) {
-			minVal[i] += dxvector[i];
-			di = x[i] - minVal[i];
-			sum += b[i] * di * di;
-			dsum += 2 * b[i] * di * dxvectorderiv[i];
+		double sumofgaussians = 0;
+
+		while (true) {
+			double dsum = 0;
+			double sum = 0;
+			for (int i = 0; i < x.length; i++) {
+				minVal[i] += dxvector[i];
+				di = x[i] - minVal[i];
+				sum += b[i] * di * di;
+				dsum += 2 * b[i] * di * dxvectorderiv[i];
+			}
+
+			sumofgaussians += count * dsum * Math.exp(-sum);
+
+			count++;
+
+			if (minVal[0] >= maxVal[0] || minVal[1] >= maxVal[1] && slope >= 0)
+				break;
+			if (minVal[0] >= maxVal[0] || minVal[1] <= maxVal[1] && slope < 0)
+				break;
+
 		}
-		
-				
-		sumofgaussians+= count * dsum * Math.exp(-sum);
-		
-		count++;
-		
-		
-		
-		if (minVal[0] >= maxVal[0] || minVal[1] >= maxVal[1] && slope >= 0 )
-			break;
-		if (minVal[0] >= maxVal[0] || minVal[1] <= maxVal[1] && slope < 0)
-			break;
 
-	}
-		
-		
-
-		
-		
-		return    sumofgaussians ;
+		return sumofgaussians;
 
 	}
 
-	
-	
 	private static final double Eend(final double[] x, final double[] a, final double[] b) {
 
 		double sum = 0;
@@ -194,11 +171,10 @@ private static final double Estartds(final double[] x, final double[] a, final d
 		double sum = 0;
 		double sumofgaussians = 0;
 		double di;
-	
-		
+
 		double ds = Math.abs(a[2 * ndims]);
 
-		double[] dxvector = { ds/ Math.sqrt( 1 + slope * slope) , slope * ds/ Math.sqrt( 1 + slope * slope)  };
+		double[] dxvector = { ds / Math.sqrt(1 + slope * slope), slope * ds / Math.sqrt(1 + slope * slope) };
 
 		while (true) {
 
@@ -210,34 +186,14 @@ private static final double Estartds(final double[] x, final double[] a, final d
 			}
 			sumofgaussians += Math.exp(-sum);
 
-			
 			if (minVal[0] >= maxVal[0] || minVal[1] >= maxVal[1] && slope >= 0)
 				break;
 			if (minVal[0] >= maxVal[0] || minVal[1] <= maxVal[1] && slope < 0)
 				break;
 
 		}
-		
-		
-		
 
 		return sumofgaussians;
 	}
-
-	public static double Distance(final double[] cordone, final double[] cordtwo) {
-
-		double distance = 0;
-		final double ndims = cordone.length;
-
-		for (int d = 0; d < ndims; ++d) {
-
-			distance += Math.pow((cordone[d] - cordtwo[d]), 2);
-
-		}
-		return Math.sqrt(distance);
-	}
-
-
-
 
 }
