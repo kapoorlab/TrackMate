@@ -12,6 +12,8 @@ import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.traverse.BreadthFirstIterator;
+import org.scijava.Cancelable;
+import org.scijava.Named;
 import org.scijava.plugin.Plugin;
 
 import fiji.plugin.trackmate.Spot;
@@ -22,15 +24,13 @@ import fiji.plugin.trackmate.Settings;
 import fiji.plugin.trackmate.TrackMate;
 import fiji.plugin.trackmate.TrackModel;
 import fiji.plugin.trackmate.action.TrackMateAction;
-import fiji.plugin.trackmate.features.edges.EdgeAnalyzer;
-import fiji.plugin.trackmate.features.track.TrackAnalyzer;
 import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings;
 import fiji.plugin.trackmate.tracking.SpotTracker;
-import fiji.plugin.trackmate.visualization.TrackMateModelView;
 import net.imglib2.util.Pair;
 import net.imglib2.util.ValuePair;
 
-public class TrackInspector implements TrackMateAction{
+public class TrackInspector implements TrackMateAction {
+
 
 
 	

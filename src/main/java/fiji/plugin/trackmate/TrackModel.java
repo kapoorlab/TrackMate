@@ -103,7 +103,7 @@ public class TrackModel
 	/**
 	 * The edges that have been modified in this model by changing its cost
 	 * using {@link #setEdgeWeight(DefaultWeightedEdge, double)} or modifying
-	 * the spots it links elsewhere.
+	 * the spots it links elsewhere. Benchmark, MultiThreaded, Algorithm, Named, Cancelable
 	 * <p>
 	 * It is the parent instance responsibility to clear this field when it is
 	 * fit to do so.
@@ -283,7 +283,7 @@ public class TrackModel
 		graph.addVertex( spotToAdd );
 	}
 
-	 void removeSpot( final Spot spotToRemove )
+	 public void removeSpot( final Spot spotToRemove )
 	{
 		graph.removeVertex( spotToRemove );
 	}
