@@ -283,7 +283,7 @@ public class TrackModel
 		graph.addVertex( spotToAdd );
 	}
 
-	void removeSpot( final Spot spotToRemove )
+	 void removeSpot( final Spot spotToRemove )
 	{
 		graph.removeVertex( spotToRemove );
 	}
